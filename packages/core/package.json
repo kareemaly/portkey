@@ -1,0 +1,27 @@
+{
+  "name": "@portkey/core",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Kareem Elbahrawy <bitriddler@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com/"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "@portkey/utils": "^0.0.0",
+    "debug": "^4.1.1",
+    "uuid": "^8.3.0"
+  }
+}
