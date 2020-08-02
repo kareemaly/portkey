@@ -1,31 +1,31 @@
+const debug = require("debug")("@portkey/job:jobProcessRunner");
 const { reCreateStore } = require("@portkey/store");
-const { process } = require("@portkey/utils");
 const actions = require("../actions");
 
 const run = async () => {
-  const {
-    viewerId,
+  const { normalizedStore, jobName, jobPath, buildId } = JSON.parse(
+    process.argv[process.argv.length - 1]
+  );
+  debug("Running job %O", {
     normalizedStore,
     jobName,
     jobPath,
     buildId
-  } = await process.getArguments();
+  });
   const store = await reCreateStore(normalizedStore);
-  const executor = require(jobPath)(store, { viewerId, buildId });
-  store.dispatch(
-    action.notifyBuildStart({
-      viewerId,
-      jobName,
-      buildId
-    })
-  );
   try {
+    const executor = require(jobPath)(store, { buildId });
+    store.dispatch(
+      actions.notifyBuildStarted({
+        jobName,
+        buildId
+      })
+    );
     await executor.prepare();
     await executor.steps.reduce(async (acc, step) => {
       return acc.then(async result => {
         store.dispatch(
-          action.notifyBuildStepStart({
-            viewerId,
+          actions.notifyBuildStepStarted({
             stepName: step.name,
             jobName,
             buildId
@@ -34,8 +34,7 @@ const run = async () => {
         try {
           await step.run(result);
           store.dispatch(
-            action.notifyBuildStepSuccess({
-              viewerId,
+            actions.notifyBuildStepSuccess({
               stepName: step.name,
               jobName,
               buildId
@@ -43,8 +42,7 @@ const run = async () => {
           );
         } catch (error) {
           store.dispatch(
-            action.notifyBuildStepFailure({
-              viewerId,
+            actions.notifyBuildStepFailure({
               stepName: step.name,
               jobName,
               buildId,
@@ -56,7 +54,6 @@ const run = async () => {
     }, Promise.resolve());
     store.dispatch(
       actions.notifyBuildSuccess({
-        viewerId,
         jobName,
         buildId
       })
@@ -64,7 +61,6 @@ const run = async () => {
   } catch (error) {
     store.dispatch(
       actions.notifyBuildFailure({
-        viewerId,
         jobName,
         buildId,
         error

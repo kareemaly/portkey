@@ -1,20 +1,13 @@
+const actions = require("../actions");
 const validateJobOrFail = require("../utils/validateJobOrFail");
 const jobStorage = require("../storage/memoryStorage");
 
-module.exports = store => async job => {
+module.exports = store => async ({ job }) => {
   try {
-    await validateJobOrFail(job);
-    await jobStorage.add(add);
-    store.dispatch(
-      actions.addJobSuccess({
-        job
-      })
-    );
-  } catch (err) {
-    store.dispatch(
-      actions.addJobFailure({
-        err
-      })
-    );
+    store.dispatch(actions.addJobStarted({ job }));
+    await jobStorage.add(job);
+    store.dispatch(actions.addJobSuccess({ job }));
+  } catch (error) {
+    store.dispatch(actions.addJobFailure({ error }));
   }
 };

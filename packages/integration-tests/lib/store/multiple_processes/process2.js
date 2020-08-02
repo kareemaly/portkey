@@ -1,4 +1,5 @@
 const { createStore } = require("@portkey/store");
+const actions = require("./actions");
 
 const store = createStore();
 

@@ -1,4 +1,7 @@
-const createStore = require("./createStore");
+const createLocalStore = require("./localStore/createLocalStore");
+const reCreateLocalStore = require("./localStore/reCreateLocalStore");
+
 module.exports = {
-  createStore
+  createStore: createLocalStore,
+  reCreateStore: reCreateLocalStore,
 };

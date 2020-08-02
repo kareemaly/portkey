@@ -12,8 +12,16 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.com/"
   },
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^26.2.2"
+  },
   "dependencies": {
+    "@portkey/ipc": "^0.0.0",
     "@portkey/utils": "^0.0.0",
+    "debug": "^4.1.1",
     "promise.any": "^2.0.1"
   }
 }

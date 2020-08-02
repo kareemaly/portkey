@@ -19,7 +19,7 @@ module.exports = createActions([
       required: ["jobName"],
       properties: {
         jobName: { type: "string" },
-        buildId: { type: "string" }
+        viewerId: { type: "string" }
       }
     }
   },

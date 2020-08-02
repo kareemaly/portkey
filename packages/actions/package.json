@@ -17,5 +17,8 @@
   },
   "devDependencies": {
     "jest": "^26.2.2"
+  },
+  "dependencies": {
+    "debug": "^4.1.1"
   }
 }
