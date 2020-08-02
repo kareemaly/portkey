@@ -1,0 +1,21 @@
+{
+  "name": "@portkey/actions",
+  "version": "0.0.0",
+  "author": "Kareem Elbahrawy <bitriddler@gmail.com>",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com/"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^26.2.2"
+  }
+}

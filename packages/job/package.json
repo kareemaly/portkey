@@ -1,0 +1,20 @@
+{
+  "name": "@portkey/job",
+  "version": "0.0.0",
+  "author": "Kareem Elbahrawy <bitriddler@gmail.com>",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com/"
+  },
+  "dependencies": {
+    "@portkey/actions": "^0.0.0",
+    "@portkey/store": "^0.0.0",
+    "@portkey/utils": "^0.0.0"
+  }
+}
