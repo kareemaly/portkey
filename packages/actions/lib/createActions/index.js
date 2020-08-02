@@ -24,6 +24,15 @@ const actionFn = (action, payloadSchema) => payload => {
   };
 };
 
+const getFailurePayloadSchema = schema => ({
+  ...schema,
+  required: [...schema.required, "error"],
+  properties: {
+    ...schema.properties,
+    error: errorSchema
+  }
+});
+
 const createActions = actions => {
   const object = {};
   actions.forEach(action => {
@@ -34,16 +43,9 @@ const createActions = actions => {
       object[value] = value;
       object[_.camelCase(value)] = actionFn(
         value,
-        append === "FAILURE"
-          ? {
-              ...payloadSchema,
-              required: [...payloadSchema.required, "error"],
-              properties: {
-                ...payloadSchema.properties,
-                error: errorSchema
-              }
-            }
-          : payloadSchema
+        append === "FAILURE" && _.isObject(action.payload)
+          ? getFailurePayloadSchema(action.payload)
+          : action.payload
       );
     });
   });

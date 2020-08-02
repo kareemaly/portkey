@@ -67,9 +67,19 @@ const waitForAny = () => () =>
       waitFor(listener.action, listener.matchPayload, listener.timeout)
     )
   );
+
+const addChildProcess = () => pid => childProcesses.push(pid);
+
 const localStore = () => {
+  const _dispatch = dispatch();
+  // Receive messages from parent process
+  process.on("message", event => {
+    if (event.isPKEvent) {
+      _dispatch(event);
+    }
+  });
   return {
-    dispatch: dispatch(),
+    dispatch: _dispatch,
     waitFor: waitFor(),
     waitForAny: waitForAny(),
     listen: listen()
