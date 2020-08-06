@@ -21,7 +21,6 @@ const run = async () => {
         buildId
       })
     );
-    await executor.prepare();
     await executor.steps.reduce(async (acc, step) => {
       return acc.then(async result => {
         store.dispatch(

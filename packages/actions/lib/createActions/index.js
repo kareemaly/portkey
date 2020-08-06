@@ -3,20 +3,23 @@ const _ = require("lodash");
 const errorSchema = require("../errorSchema");
 const appends = ["STARTED", "SUCCESS", "FAILURE"];
 
-const validatePayloadOrThrow = (schema, object) => {
+const validatePayloadOrThrow = (action, schema, object) => {
   const ajv = new Ajv();
   const validate = ajv.compile({
     ...schema,
     additionalProperties: false
   });
   if (!validate(object)) {
-    throw validate.errors;
+    throw {
+      action,
+      validationErrors: validate.errors
+    };
   }
 };
 
 const actionFn = (action, payloadSchema) => payload => {
   if (_.isObject(payloadSchema)) {
-    validatePayloadOrThrow(payloadSchema, payload);
+    validatePayloadOrThrow(action, payloadSchema, payload);
   }
   return {
     action,

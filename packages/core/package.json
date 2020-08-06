@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@portkey/actions": "^0.0.0",
     "@portkey/utils": "^0.0.0",
     "debug": "^4.1.1",
     "uuid": "^8.3.0"

@@ -13,6 +13,7 @@
     "registry": "https://registry.npmjs.com/"
   },
   "dependencies": {
+    "@portkey/actions": "^0.0.0",
     "debug": "^4.1.1"
   }
 }

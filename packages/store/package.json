@@ -19,6 +19,7 @@
     "jest": "^26.2.2"
   },
   "dependencies": {
+    "@portkey/actions": "^0.0.0",
     "@portkey/ipc": "^0.0.0",
     "@portkey/utils": "^0.0.0",
     "debug": "^4.1.1",

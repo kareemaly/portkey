@@ -1,5 +1,4 @@
 module.exports = (store, { buildId }) => ({
-  prepare: () => {},
   steps: [
     {
       name: "Build",

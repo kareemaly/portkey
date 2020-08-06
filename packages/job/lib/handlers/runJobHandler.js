@@ -30,6 +30,6 @@ module.exports = store => async ({ viewerId, jobName }) => {
     ]);
     store.removeChildProcessById(childProcess.pid);
   } catch (error) {
-    store.dispatch(actions.runJobFailure({ error }));
+    store.dispatch(actions.notifyBuildFailure({ jobName, buildId, error }));
   }
 };
