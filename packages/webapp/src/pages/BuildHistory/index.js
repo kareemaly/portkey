@@ -1,4 +1,6 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
+import keys from "lodash/keys";
 import { useParams } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -11,6 +13,7 @@ import Layout from "../../components/Layout";
 import ErrorView from "../../components/ErrorView";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import io from "../../api/socketIO";
+import buildEventHandlers from "./buildEventHandlers";
 
 const BuildHistory = props => {
   const { jobName } = useParams();
@@ -52,39 +55,12 @@ const BuildHistory = props => {
   }, [fetchBuildsSuccess]);
 
   React.useEffect(() => {
-    const onBuildStarted = ({ buildId, jobName: buildJobName }) => {
-      if (jobName === buildJobName) {
-        setBuilds(b => [
-          ...b,
-          {
-            id: buildId,
-            jobName,
-            startedAt: new Date().getTime(),
-            status: "started",
-            steps: []
-          }
-        ]);
-      }
-    };
-    const onBuildSuccess = ({ buildId }) => {
-      if (jobName === buildJobName) {
-        setBuilds(b => {
-          const i = b.findIndex(a => a.id === buildId);
-          return [
-            ...b.slice(0, i),
-            {
-              ...b[i],
-              successAd: new Date().getTime(),
-              status: "success"
-            },
-            ...b.slice(i + 1)
-          ];
-        });
-      }
-    };
-    io.on(jobActions.NOTIFY_BUILD_STARTED, onBuildStarted);
+    const eventHandlers = buildEventHandlers(jobName, setBuilds);
+    keys(eventHandlers).forEach(action => io.on(action, eventHandlers[action]));
     return function cleanup() {
-      io.off(jobActions.NOTIFY_BUILD_STARTED, onBuildStarted);
+      keys(eventHandlers).forEach(action =>
+        io.off(action, eventHandlers[action])
+      );
     };
   }, []);
 
@@ -93,6 +69,12 @@ const BuildHistory = props => {
       refreshBuilds();
     }
   }, [isBuildSuccess]);
+
+  const history = useHistory();
+
+  const onStepClick = React.useCallback((e, buildId, stepId) => {
+    history.push(`/job/${jobName}/build/${buildId}`);
+  });
 
   return (
     <Layout>
@@ -114,7 +96,11 @@ const BuildHistory = props => {
         <Grid item>
           <Box m={2}>
             {builds.map(build => (
-              <BuildSteps key={build.id} build={build} />
+              <BuildSteps
+                onStepClick={onStepClick}
+                key={build.id}
+                build={build}
+              />
             ))}
           </Box>
         </Grid>

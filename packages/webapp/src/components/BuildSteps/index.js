@@ -49,7 +49,7 @@ const getBuildStepTime = (step, now) => {
   );
 };
 
-const BuildStep = ({ step }) => {
+const BuildStep = ({ step, onStepClick }) => {
   const classes = useStepStyles({ step });
   const [now, setNow] = React.useState(new Date());
   React.useEffect(() => {
@@ -61,7 +61,12 @@ const BuildStep = ({ step }) => {
     };
   }, []);
   return (
-    <Box p={3} m={1} className={classes.buildStep}>
+    <Box
+      p={3}
+      m={1}
+      className={classes.buildStep}
+      onClick={e => onStepClick(e, step.id)}
+    >
       <div className={classes.buildStepName}>
         <Typography variant={"subtitle2"}>{step.name}</Typography>
       </div>
@@ -74,12 +79,16 @@ const BuildStep = ({ step }) => {
   );
 };
 
-const BuildSteps = ({ build }) => {
+const BuildSteps = ({ build, onStepClick }) => {
   const classes = useRootStyles();
   return (
     <div className={classes.root}>
       {build.steps.map(step => (
-        <BuildStep key={step.id} step={step} />
+        <BuildStep
+          onStepClick={(e, stepId) => onStepClick(e, build.id, stepId)}
+          key={step.id}
+          step={step}
+        />
       ))}
     </div>
   );

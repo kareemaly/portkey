@@ -9,7 +9,7 @@ export default function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/job/:jobName/build/:id">
+        <Route path="/job/:jobName/build/:buildId">
           <BuildDetails />
         </Route>
         <Route path="/job/:jobName">
