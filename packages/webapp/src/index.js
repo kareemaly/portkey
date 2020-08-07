@@ -5,17 +5,23 @@ import "./index.css";
 import { Provider } from "react-redux";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import DevTools from "./components/DevTools";
 import createStore from "./store/createStore";
+import eruda from "eruda";
 
-// import eruda from "eruda";
-// eruda.init();
+if (process.env.REACT_APP_MOBILE === "true") {
+  eruda.init();
+}
 
 const store = createStore();
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <>
+        <DevTools />
+        <App />
+      </>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

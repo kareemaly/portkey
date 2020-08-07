@@ -35,7 +35,7 @@ module.exports = (store, { buildId }) => {
                 outputStreamActions.send({
                   jobName: "frontend-builder",
                   buildId,
-                  stepName: "Build",
+                  stepName: "Deploy",
                   message: `Message #${i++}`
                 })
               );

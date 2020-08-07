@@ -7,6 +7,10 @@ const defaultBuild = {
   steps: []
 };
 
+const defaultStep = {
+  messages: []
+};
+
 const updateArray = (array, id, payload) => {
   if (!array) {
     return [payload];
@@ -41,13 +45,17 @@ const updateBuild = (state, action, payload) => {
 };
 
 const updateBuildStep = (state, action, payload) => {
+  const newStep = {
+    ...defaultStep,
+    ...payload
+  };
   const build = get(state, ["data", action.payload.jobName], []).find(
     b => b.id === action.payload.buildId
   );
   if (!build) {
-    return updateBuild(state, action, { steps: [payload] });
+    return updateBuild(state, action, { steps: [newStep] });
   }
-  const steps = updateArray(build.steps, action.payload.stepName, payload);
+  const steps = updateArray(build.steps, action.payload.stepName, newStep);
   return updateBuild(state, action, { steps });
 };
 

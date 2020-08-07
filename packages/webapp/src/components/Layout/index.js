@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
       <Header />
       <Grid container justify="center">
         <Grid item xs={12} lg={8}>
-          <Box mt={2}>{children}</Box>
+          <Box m={2}>{children}</Box>
         </Grid>
       </Grid>
     </>

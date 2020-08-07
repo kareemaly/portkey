@@ -7,17 +7,20 @@ const socketIo = require("socket.io");
 const config = require("./config");
 const outputStreamSocketIO = require("./outputStreamSocketIO");
 
-const startServer = (store, { buildHistoryStorage, jobStorage }) => {
-  const app = express();
-  const http = httpModule.createServer(app);
-  const io = socketIo(http);
-  app.use(cors());
+const startServer = ({
+  store,
+  expressApp,
+  httpServer,
+  buildHistoryStorage,
+  jobStorage,
+  apiBaseUrl = "/api"
+}) => {
+  const io = socketIo(httpServer);
   app.use(bodyParser.json());
-  app.use("/api", router(store, { buildHistoryStorage, jobStorage }));
+  app.use(apiBaseUrl, router(store, { buildHistoryStorage, jobStorage }));
   outputStreamSocketIO(store, io);
-  http.listen(config.port, () => {
-    console.log(`App listenting on port ${config.port}`);
-  });
 };
 
-module.exports = startServer;
+module.exports = {
+  serve
+};

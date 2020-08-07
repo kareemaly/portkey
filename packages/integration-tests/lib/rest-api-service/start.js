@@ -5,7 +5,7 @@ const {
   registerHandlers: jobRegisterHandlers,
   actions: jobActions
 } = require("@portkey/job");
-const restApiService = require("@portkey/rest-api-service");
+const { serve: serveApi } = require("@portkey/rest-api-service");
 const {
   memoryStorage: buildHistoryStorage,
   registerHandlers: buildHistoryRegisterHandlers
@@ -13,9 +13,16 @@ const {
 
 const store = createStore();
 
-restApiService(store, {
+const app = express();
+const http = httpModule.createServer(app);
+
+serveApi({
+  store,
+  expressApp: app,
+  httpServer: http,
   buildHistoryStorage,
-  jobStorage
+  jobStorage,
+  apiBaseUrl: "/api"
 });
 
 buildHistoryRegisterHandlers(store, buildHistoryStorage);
@@ -29,3 +36,7 @@ store.dispatch(
     }
   })
 );
+
+http.listen(4000, () => {
+  console.log(`App listenting on port 4000`);
+});
