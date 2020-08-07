@@ -17,17 +17,11 @@ const Dashboard = props => {
     history.push(`/job/${job.jobName}`);
   });
   return (
-    <Layout>
-      <Grid justify={"center"} container>
-        <Grid item>
-          <Box m={2}>
-            {isLoading && <CircularProgress />}
-            {isSuccess && <JobTable goToJob={onJobClick} jobs={data} />}
-            {error && <ErrorView error={error} />}
-          </Box>
-        </Grid>
-      </Grid>
-    </Layout>
+    <Box>
+      {isLoading && <CircularProgress />}
+      {isSuccess && <JobTable goToJob={onJobClick} jobs={data} />}
+      {error && <ErrorView error={error} />}
+    </Box>
   );
 };
 

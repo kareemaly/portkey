@@ -1,22 +1,19 @@
 import React from "react";
+import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import keys from "lodash/keys";
 import { useParams } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import { actions as jobActions } from "@portkey/job";
 import BuildSteps from "../../components/BuildSteps";
 import useApiRequest from "../../api/useApiRequest";
-import JobTable from "../../components/JobTable";
-import Layout from "../../components/Layout";
-import ErrorView from "../../components/ErrorView";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import io from "../../api/socketIO";
-import buildEventHandlers from "./buildEventHandlers";
+import events from "./events";
+import * as localActions from "../../store/actions";
+import useDispatchIoEvents from "../../utils/react/useDispatchIoEvents";
 
-const BuildHistory = props => {
+const BuildHistory = ({ dispatch, builds }) => {
   const { jobName } = useParams();
+  const jobBuilds = builds[jobName] || [];
   const {
     isLoading: isBuildLoading,
     isSuccess: isBuildSuccess,
@@ -31,8 +28,6 @@ const BuildHistory = props => {
     { lazy: true }
   );
 
-  const [builds, setBuilds] = React.useState([]);
-
   const {
     data: job,
     isLoading: isFetchingJob,
@@ -44,31 +39,18 @@ const BuildHistory = props => {
     data: apiBuilds,
     isLoading: isFetchingBuilds,
     isSuccess: fetchBuildsSuccess,
-    error: fetchBuildsError,
-    call: refreshBuilds
+    error: fetchBuildsError
   } = useApiRequest({ url: `/build`, params: { jobName } });
 
   React.useEffect(() => {
     if (fetchBuildsSuccess) {
-      setBuilds(apiBuilds);
+      apiBuilds.forEach(apiBuild => {
+        dispatch(localActions.fetchBuildSuccess(jobName, apiBuild));
+      });
     }
   }, [fetchBuildsSuccess]);
 
-  React.useEffect(() => {
-    const eventHandlers = buildEventHandlers(jobName, setBuilds);
-    keys(eventHandlers).forEach(action => io.on(action, eventHandlers[action]));
-    return function cleanup() {
-      keys(eventHandlers).forEach(action =>
-        io.off(action, eventHandlers[action])
-      );
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (isBuildSuccess) {
-      refreshBuilds();
-    }
-  }, [isBuildSuccess]);
+  useDispatchIoEvents(events);
 
   const history = useHistory();
 
@@ -77,36 +59,32 @@ const BuildHistory = props => {
   });
 
   return (
-    <Layout>
-      <Grid justify={"center"} container>
-        <Grid item>
-          <Box m={2}>
-            <Button
-              variant="contained"
-              disabled={isBuildLoading}
-              color="secondary"
-              onClick={buildJob}
-            >
-              Build
-            </Button>
-          </Box>
-        </Grid>
+    <Grid direction={"column"} container>
+      <Grid item>
+        <Button
+          variant="contained"
+          disabled={isBuildLoading}
+          color="secondary"
+          onClick={buildJob}
+        >
+          Build
+        </Button>
       </Grid>
-      <Grid container>
-        <Grid item>
-          <Box m={2}>
-            {builds.map(build => (
-              <BuildSteps
-                onStepClick={onStepClick}
-                key={build.id}
-                build={build}
-              />
-            ))}
-          </Box>
-        </Grid>
+      <Grid item>
+        <Box mt={2}>
+          {jobBuilds.map(build => (
+            <BuildSteps
+              onStepClick={onStepClick}
+              key={build.id}
+              build={build}
+            />
+          ))}
+        </Box>
       </Grid>
-    </Layout>
+    </Grid>
   );
 };
 
-export default BuildHistory;
+export default connect(state => ({
+  builds: state.builds.data
+}))(BuildHistory);

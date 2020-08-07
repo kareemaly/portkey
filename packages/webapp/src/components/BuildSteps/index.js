@@ -1,9 +1,11 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import * as colors from "@material-ui/core/colors";
-import timediff from "timediff";
 import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import getBuildStepTime from "../../utils/build/getBuildStepTime";
+import useTimer from "../../utils/react/useTimer";
 
 const useRootStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +26,7 @@ const getStepBgColor = ({ status }) => {
 
 const useStepStyles = makeStyles(theme => ({
   buildStep: {
+    cursor: "pointer",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -32,38 +35,14 @@ const useStepStyles = makeStyles(theme => ({
   buildStepName: {},
   buildStepTime: {}
 }));
-const getBuildStepTime = (step, now) => {
-  return timediff(
-    step.startedAt,
-    step.successAt || step.failureAt || now,
-    ({ hours, minutes, seconds }) => {
-      let str = "";
-      if (hours !== 0) {
-        str += `${hours} Hours, `;
-      }
-      if (hours !== 0 || minutes !== 0) {
-        str += `${minutes} Minutes, `;
-      }
-      return `${seconds} Seconds`;
-    }
-  );
-};
 
 const BuildStep = ({ step, onStepClick }) => {
   const classes = useStepStyles({ step });
-  const [now, setNow] = React.useState(new Date());
-  React.useEffect(() => {
-    const id = setInterval(() => {
-      setNow(new Date());
-    }, 1000);
-    return function cleanup() {
-      clearInterval(id);
-    };
-  }, []);
+  const now = useTimer();
   return (
     <Box
       p={3}
-      m={1}
+      mr={2}
       className={classes.buildStep}
       onClick={e => onStepClick(e, step.id)}
     >
@@ -82,15 +61,18 @@ const BuildStep = ({ step, onStepClick }) => {
 const BuildSteps = ({ build, onStepClick }) => {
   const classes = useRootStyles();
   return (
-    <div className={classes.root}>
+    <Grid container>
       {build.steps.map(step => (
-        <BuildStep
-          onStepClick={(e, stepId) => onStepClick(e, build.id, stepId)}
-          key={step.id}
-          step={step}
-        />
+        <Grid item key={step.id}>
+          <Box mb={2}>
+            <BuildStep
+              onStepClick={(e, stepId) => onStepClick(e, build.id, stepId)}
+              step={step}
+            />
+          </Box>
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 };
 

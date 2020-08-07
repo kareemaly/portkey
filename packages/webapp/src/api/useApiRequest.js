@@ -1,7 +1,8 @@
 import React from "react";
+import isFunction from "lodash/isFunction";
 import client from "./client";
 
-const useApiRequest = (requestDetails, { lazy } = {}) => {
+const useApiRequest = (requestDetails, { onSuccess, lazy } = {}) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
@@ -16,6 +17,9 @@ const useApiRequest = (requestDetails, { lazy } = {}) => {
           ...extraDetails
         })
         .then(response => {
+          if (isFunction(onSuccess)) {
+            onSuccess(response.data.data);
+          }
           setData(response.data.data);
           setIsLoading(false);
           setIsSuccess(true);

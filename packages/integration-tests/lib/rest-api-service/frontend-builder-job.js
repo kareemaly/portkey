@@ -8,6 +8,7 @@ module.exports = (store, { buildId }) => {
         run: async () => {
           store.dispatch(
             outputStreamActions.send({
+              jobName: "frontend-builder",
               buildId,
               stepName: "Build",
               message: "Logging some events"
@@ -16,6 +17,7 @@ module.exports = (store, { buildId }) => {
           await new Promise(resolve => setTimeout(resolve, 6000));
           store.dispatch(
             outputStreamActions.send({
+              jobName: "frontend-builder",
               buildId,
               stepName: "Build",
               message: "Successful Build"
@@ -25,9 +27,20 @@ module.exports = (store, { buildId }) => {
       },
       {
         name: "Deploy",
-        run: () => {
-          throw new Error("something");
-        }
+        run: () =>
+          new Promise(resolve => {
+            let i = 0;
+            setInterval(() => {
+              store.dispatch(
+                outputStreamActions.send({
+                  jobName: "frontend-builder",
+                  buildId,
+                  stepName: "Build",
+                  message: `Message #${i++}`
+                })
+              );
+            }, 10000);
+          })
       }
     ]
   };

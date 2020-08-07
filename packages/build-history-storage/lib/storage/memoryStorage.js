@@ -61,7 +61,7 @@ module.exports = {
       messages: [
         ...buildHistory[buildId].steps[stepName].messages,
         {
-          message,
+          content: message,
           timestamp: new Date().getTime()
         }
       ]

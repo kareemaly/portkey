@@ -1,16 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import eruda from "eruda";
 import "normalize.css/normalize.css";
 import "./index.css";
+import { Provider } from "react-redux";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import createStore from "./store/createStore";
 
-eruda.init();
+// import eruda from "eruda";
+// eruda.init();
+
+const store = createStore();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
