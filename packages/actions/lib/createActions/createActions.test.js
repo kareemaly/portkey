@@ -1,22 +1,16 @@
 const createActions = require("./index");
 
 describe("createActions", () => {
-  it("should create all actions constants", () => {
-    const actions = createActions([{ name: "RUN_JOB" }]);
-    expect(actions.RUN_JOB).toEqual("RUN_JOB");
-    expect(actions.RUN_JOB_STARTED).toEqual("RUN_JOB_STARTED");
-    expect(actions.RUN_JOB_SUCCESS).toEqual("RUN_JOB_SUCCESS");
-    expect(actions.RUN_JOB_FAILURE).toEqual("RUN_JOB_FAILURE");
+  it("should create action constant", () => {
+    const actions = createActions("JOB", [{ name: "RUN_JOB" }]);
+    expect(actions.RUN_JOB).toEqual("JOB.RUN_JOB");
   });
-  it("should create corresponding functions", () => {
-    const actions = createActions([{ name: "RUN_JOB" }]);
-    expect(actions.runJob()).toHaveProperty("action", "RUN_JOB");
-    expect(actions.runJobStarted()).toHaveProperty("action", "RUN_JOB_STARTED");
-    expect(actions.runJobSuccess()).toHaveProperty("action", "RUN_JOB_SUCCESS");
-    expect(actions.runJobFailure()).toHaveProperty("action", "RUN_JOB_FAILURE");
+  it("should create corresponding function", () => {
+    const actions = createActions("JOB", [{ name: "RUN_JOB" }]);
+    expect(actions.runJob()).toHaveProperty("action", "JOB.RUN_JOB");
   });
   it("should validate parameters with ajv", () => {
-    const actions = createActions([
+    const actions = createActions("JOB", [
       {
         name: "RUN_JOB",
         payload: {
@@ -29,40 +23,9 @@ describe("createActions", () => {
         }
       }
     ]);
-    expect(() => actions.runJobStarted()).toThrow();
-    expect(() => actions.runJobStarted({})).toThrow();
-    expect(() => actions.runJobStarted({ jobName: "s" })).toThrow();
-    actions.runJobStarted({ jobName: "sree" });
-  });
-  it("should require error object on failure", () => {
-    const actions = createActions([
-      {
-        name: "RUN_JOB",
-        payload: {
-          type: "object",
-          required: ["jobName"],
-          properties: {
-            jobName: { type: "string", minLength: 2 }
-          }
-        }
-      }
-    ]);
-    expect(() => actions.runJobFailure({ jobName: "something" })).toThrow();
-    expect(() =>
-      actions.runJobFailure({
-        jobName: "something",
-        error: {
-          code: 300
-        }
-      })
-    ).toThrow();
-
-    actions.runJobFailure({
-      jobName: "something",
-      error: {
-        message: "Not working",
-        code: 300
-      }
-    });
+    expect(() => actions.runJob()).toThrow();
+    expect(() => actions.runJob({})).toThrow();
+    expect(() => actions.runJob({ jobName: "s" })).toThrow();
+    actions.runJob({ jobName: "sree" });
   });
 });

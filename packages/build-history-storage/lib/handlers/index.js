@@ -1,24 +1,24 @@
 const { actions: jobActions } = require("@portkey/job");
 const { actions: outputStreamActions } = require("@portkey/job-output-stream");
-const actions = require("../actions");
+const buildActions = require("../actions");
 
 module.exports = (store, storage) => {
   const wrapper = async (buildId, fn) => {
     try {
       store.dispatch(
-        actions.storeBuildStarted({
+        buildActions.storeStarted({
           buildId
         })
       );
       await fn();
       store.dispatch(
-        actions.storeBuildSuccess({
+        buildActions.storeSuccess({
           buildId
         })
       );
     } catch (error) {
       store.dispatch(
-        actions.storeBuildFailure({
+        buildActions.storeFailure({
           buildId,
           error
         })

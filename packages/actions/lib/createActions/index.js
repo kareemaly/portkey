@@ -1,7 +1,6 @@
 const Ajv = require("ajv");
 const _ = require("lodash");
 const errorSchema = require("../errorSchema");
-const appends = ["STARTED", "SUCCESS", "FAILURE"];
 
 const validatePayloadOrThrow = (action, schema, object) => {
   const ajv = new Ajv();
@@ -17,25 +16,25 @@ const validatePayloadOrThrow = (action, schema, object) => {
   }
 };
 
-const actionFn = (action, payloadSchema) => payload => {
+const actionFn = (prefix, action, payloadSchema) => payload => {
   if (_.isObject(payloadSchema)) {
     validatePayloadOrThrow(action, payloadSchema, payload);
   }
   return {
-    action,
+    action: `${prefix}.${action}`,
     payload
   };
 };
-const createActions = actions => {
+
+const createActions = (prefix, actions) => {
   const object = {};
   actions.forEach(action => {
-    object[action.name] = `${action.name}`;
-    object[_.camelCase(action.name)] = actionFn(action.name, action.payload);
-    appends.forEach(append => {
-      const value = `${action.name}_${append}`;
-      object[value] = value;
-      object[_.camelCase(value)] = actionFn(value);
-    });
+    object[action.name] = `${prefix}.${action.name}`;
+    object[_.camelCase(action.name)] = actionFn(
+      prefix,
+      action.name,
+      action.payload
+    );
   });
   return object;
 };

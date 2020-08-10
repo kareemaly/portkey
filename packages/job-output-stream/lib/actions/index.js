@@ -1,6 +1,6 @@
 const { createActions } = require("@portkey/actions");
 
-module.exports = createActions([
+module.exports = createActions("JOB_OUTPUT_STREAM", [
   {
     name: "SEND",
     payload: {

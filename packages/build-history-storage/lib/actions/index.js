@@ -1,14 +1,34 @@
 const { createActions } = require("@portkey/actions");
 
-module.exports = createActions([
+module.exports = createActions("BUILD_HISTORY_STORAGE", [
   {
-    name: "STORE_BUILD",
+    name: "STORE_STARTED",
     payload: {
       type: "object",
-      required: ["buildId", "status"],
+      required: ["buildId"],
+      properties: {
+        buildId: { type: "string" }
+      }
+    }
+  },
+  {
+    name: "STORE_SUCCESS",
+    payload: {
+      type: "object",
+      required: ["buildId"],
+      properties: {
+        buildId: { type: "string" }
+      }
+    }
+  },
+  {
+    name: "STORE_FAILURE",
+    payload: {
+      type: "object",
+      required: ["buildId", "error"],
       properties: {
         buildId: { type: "string" },
-        status: { type: "string" }
+        error: { type: "object" }
       }
     }
   }
