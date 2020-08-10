@@ -10,7 +10,6 @@ core.store.set("credentials", { dbPassword: "secret" });
 
 core.addJob("frontend-builder", {
   job: core => ({
-    prepare: context => {},
     steps: [
       {
         name: "Lint",

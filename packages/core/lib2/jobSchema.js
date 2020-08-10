@@ -2,7 +2,7 @@ const Joi = require("@hapi/joi");
 
 const githubEventHandlerSchema = Joi.object({
   event: Joi.string().required(),
-  condition: Joi.function().required()
+  condition: Joi.string().required()
 });
 
 const githubSchema = Joi.object({
@@ -16,14 +16,9 @@ const githubSchema = Joi.object({
   workflow: Joi.array().items(githubEventHandlerSchema)
 });
 
-const stepSchema = Joi.object({
-  name: Joi.string().required(),
-  run: Joi.function().required()
-});
-
 const jobSchema = Joi.object({
   github: githubSchema,
-  steps: Joi.array().items(stepSchema)
+  jobPath: Joi.string()
 });
 
 module.exports = jobSchema;
