@@ -2,6 +2,8 @@
   "name": "@portkey/webapp",
   "version": "0.1.0",
   "private": true,
+  "files": ["build", "lib"],
+  "main": "lib/serve.js",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -28,6 +30,7 @@
     "timediff": "^1.1.1"
   },
   "scripts": {
+    "prepublishOnly": "yarn build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -37,11 +40,7 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

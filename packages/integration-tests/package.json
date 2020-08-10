@@ -28,6 +28,8 @@
     "@portkey/rest-api-service": "^0.0.0",
     "@portkey/store": "^0.0.0",
     "@portkey/utils": "^0.0.0",
-    "debug": "^4.1.1"
+    "@portkey/webapp": "^0.1.0",
+    "debug": "^4.1.1",
+    "express": "^4.17.1"
   }
 }
