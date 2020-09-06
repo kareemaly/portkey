@@ -1,1 +1,0 @@
-const validateJobOrFail = job => {};
