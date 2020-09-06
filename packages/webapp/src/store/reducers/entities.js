@@ -36,30 +36,29 @@ function updateEntity(entityName, state, data) {
     ...state,
     [entityName]: {
       ...state[entityName],
-      [data.id]: {
-        ...state[entityName][data.id],
-        ...data
-      }
+      [data.id]: data
     }
   };
 }
 
-function updateBuild(state, data) {
+function updateBuild(state, build) {
   return updateEntity("builds", state, {
     ...defaultBuild,
-    ...data
+    ...state.builds[build.id],
+    ...build
   });
 }
 
-function addBuildStep(state, buildId, data) {
-  const newState = updateEntity("builds", state, {
-    id: buildId,
-    steps: uniq([...state.builds[buildId].steps, data.id])
+function addBuildStep(state, build, step) {
+  const newState = updateBuild(state, {
+    ...build,
+    steps: uniq([...state.builds[build.id].steps, step.id])
   });
 
   return updateEntity("buildSteps", newState, {
     ...defaultStep,
-    ...data
+    ...state.buildSteps[step.id],
+    ...step
   });
 }
 
@@ -72,46 +71,76 @@ export default function entitiesReducer(state = defaultState, action) {
       return updateBuild(state, {
         id: action.payload.buildId,
         startedAt: action.payload.sentAt,
-        status: "started"
+        status: "started",
+        jobName: action.payload.jobName
       });
     case jobActions.NOTIFY_BUILD_SUCCESS:
       return updateBuild(state, {
         id: action.payload.buildId,
         successAt: action.payload.sentAt,
-        status: "success"
+        status: "success",
+        jobName: action.payload.jobName
       });
     case jobActions.NOTIFY_BUILD_FAILURE:
       return updateBuild(state, {
         id: action.payload.buildId,
         failureAt: action.payload.sentAt,
-        status: "failure"
+        status: "failure",
+        jobName: action.payload.jobName
       });
     case jobActions.NOTIFY_BUILD_STEP_STARTED:
-      return addBuildStep(state, action.payload.buildId, {
-        id: action.payload.stepId,
-        name: action.payload.stepName,
-        startedAt: action.payload.sentAt,
-        status: "started"
-      });
+      return addBuildStep(
+        state,
+        {
+          id: action.payload.buildId,
+          jobName: action.payload.jobName
+        },
+        {
+          id: action.payload.stepId,
+          name: action.payload.stepName,
+          startedAt: action.payload.sentAt,
+          status: "started"
+        }
+      );
     case jobActions.NOTIFY_BUILD_STEP_SUCCESS:
-      return addBuildStep(state, action.payload.buildId, {
-        id: action.payload.stepId,
-        name: action.payload.stepName,
-        successAt: action.payload.sentAt,
-        status: "success"
-      });
+      return addBuildStep(
+        state,
+        {
+          id: action.payload.buildId,
+          jobName: action.payload.jobName
+        },
+        {
+          id: action.payload.stepId,
+          name: action.payload.stepName,
+          successAt: action.payload.sentAt,
+          status: "success"
+        }
+      );
     case jobActions.NOTIFY_BUILD_STEP_FAILURE:
-      return addBuildStep(state, action.payload.buildId, {
-        id: action.payload.stepId,
-        name: action.payload.stepName,
-        failureAt: action.payload.sentAt,
-        status: "failure"
+      return addBuildStep(
+        state,
+        {
+          id: action.payload.buildId,
+          jobName: action.payload.jobName
+        },
+        {
+          id: action.payload.stepId,
+          name: action.payload.stepName,
+          failureAt: action.payload.sentAt,
+          status: "failure"
+        }
+      );
+    case outputStreamActions.SEND:
+      return updateBuild(state, {
+        id: action.payload.buildId,
+        messages: [
+          ...state.builds[action.payload.buildId].messages,
+          {
+            timestamp: action.payload.sentAt,
+            message: action.payload.message
+          }
+        ]
       });
-    // case outputStreamActions.SEND:
-    //   return updateBuildMessage(state, action, {
-    //     timestamp: action.payload.sentAt,
-    //     message: action.payload.message
-    //   });
   }
   return state;
 }

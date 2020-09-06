@@ -21,15 +21,24 @@ const BuildDetails = () => {
       onSuccess: data => dispatch(localActions.fetchBuildSuccess(jobName, data))
     }
   );
+
   const build = useSelector(state => {
-    const builds = get(state, ["builds", "data", jobName], []);
-    return builds.find(b => b.id === buildId);
+    const normalizedBuild = get(state, ["entities", "builds", buildId], {
+      steps: []
+    });
+    return {
+      ...normalizedBuild,
+      steps: normalizedBuild.steps.map(id =>
+        get(state, ["entities", "buildSteps", id])
+      )
+    };
   });
 
   return (
     <Box m={2}>
-      {build &&
-        build.steps.map(step => <BuildStepInfo step={step} key={step.name} />)}
+      {build.steps.map(step => (
+        <BuildStepInfo messages={build.messages} step={step} key={step.name} />
+      ))}
     </Box>
   );
 };

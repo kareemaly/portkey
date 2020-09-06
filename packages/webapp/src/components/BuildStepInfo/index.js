@@ -33,7 +33,16 @@ const getStepSubTitle = step => {
   ].join(", ");
 };
 
-const BuildStepInfo = ({ step }) => {
+const getBetween = (messages, from, to) => {
+  return messages.filter(message => {
+    return (
+      new Date(message.timestamp) < new Date(to) &&
+      new Date(message.timestamp) > new Date(from)
+    );
+  });
+};
+
+const BuildStepInfo = ({ messages, step }) => {
   const classes = useStyles();
   const now = useTimer();
   return (
@@ -47,18 +56,22 @@ const BuildStepInfo = ({ step }) => {
         </Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.messagesWrapper}>
-        {step.messages.map(message => (
-          <Box mb={1}>
+        {getBetween(
+          messages,
+          step.startedAt,
+          step.successAt || step.failureAt || Date.now()
+        ).map(({ message, timestamp }) => (
+          <Box mb={1} key={timestamp}>
             <Grid container>
               <Grid item>
                 <Box mr={2}>
                   <Typography variant={"caption"}>
-                    {dateFormat(message.timestamp, "mediumTime")}
+                    {dateFormat(timestamp, "mediumTime")}
                   </Typography>
                 </Box>
               </Grid>
               <Grid item>
-                <Typography variant={"body2"}>{message.content}</Typography>
+                <Typography variant={"body2"}>{message}</Typography>
               </Grid>
             </Grid>
           </Box>

@@ -59,8 +59,6 @@ const BuildHistory = ({ dispatch, builds }) => {
     history.push(`/job/${jobName}/build/${buildId}`);
   });
 
-  console.log("builds", jobBuilds);
-
   return (
     <Grid direction={"column"} container>
       <Grid item>
@@ -74,8 +72,6 @@ const BuildHistory = ({ dispatch, builds }) => {
         </Button>
       </Grid>
       <Grid item>
-        <pre>{JSON.stringify(jobBuilds, null, 2)}</pre>
-        {false && (
           <Box mt={2}>
             {jobBuilds.map(build => (
               <BuildSteps
@@ -85,7 +81,6 @@ const BuildHistory = ({ dispatch, builds }) => {
               />
             ))}
           </Box>
-        )}
       </Grid>
     </Grid>
   );
