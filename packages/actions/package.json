@@ -19,6 +19,7 @@
     "jest": "^26.2.2"
   },
   "dependencies": {
+    "ajv-errors": "^1.0.1",
     "debug": "^4.1.1"
   }
 }

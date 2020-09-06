@@ -9,7 +9,9 @@ module.exports = (store, storage) => {
       await storage.add(job.jobName, job);
       store.dispatch(actions.addJobSuccess({ job }));
     } catch (error) {
-      store.dispatch(actions.addJobFailure({ error }));
+      store.dispatch(
+        actions.addJobFailure({ error: { message: error.message } })
+      );
     }
   });
 };

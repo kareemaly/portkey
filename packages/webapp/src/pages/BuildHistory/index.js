@@ -9,11 +9,12 @@ import BuildSteps from "../../components/BuildSteps";
 import useApiRequest from "../../api/useApiRequest";
 import events from "./events";
 import * as localActions from "../../store/actions";
+import pageSelectors from "./selectors";
 import useDispatchIoEvents from "../../utils/react/useDispatchIoEvents";
 
 const BuildHistory = ({ dispatch, builds }) => {
   const { jobName } = useParams();
-  const jobBuilds = builds[jobName] || [];
+  const jobBuilds = builds.filter(b => b.jobName === jobName);
   const {
     isLoading: isBuildLoading,
     isSuccess: isBuildSuccess,
@@ -58,6 +59,8 @@ const BuildHistory = ({ dispatch, builds }) => {
     history.push(`/job/${jobName}/build/${buildId}`);
   });
 
+  console.log("builds", jobBuilds);
+
   return (
     <Grid direction={"column"} container>
       <Grid item>
@@ -71,20 +74,23 @@ const BuildHistory = ({ dispatch, builds }) => {
         </Button>
       </Grid>
       <Grid item>
-        <Box mt={2}>
-          {jobBuilds.map(build => (
-            <BuildSteps
-              onStepClick={onStepClick}
-              key={build.id}
-              build={build}
-            />
-          ))}
-        </Box>
+        <pre>{JSON.stringify(jobBuilds, null, 2)}</pre>
+        {false && (
+          <Box mt={2}>
+            {jobBuilds.map(build => (
+              <BuildSteps
+                onStepClick={onStepClick}
+                key={build.id}
+                build={build}
+              />
+            ))}
+          </Box>
+        )}
       </Grid>
     </Grid>
   );
 };
 
 export default connect(state => ({
-  builds: state.builds.data
+  builds: pageSelectors.allBuilds(state)
 }))(BuildHistory);

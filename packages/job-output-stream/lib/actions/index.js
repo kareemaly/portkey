@@ -5,11 +5,9 @@ module.exports = createActions("JOB_OUTPUT_STREAM", [
     name: "SEND",
     payload: {
       type: "object",
-      required: ["buildId", "stepName", "message", "jobName"],
+      required: ["buildId"],
       properties: {
-        jobName: { type: "string" },
         buildId: { type: "string" },
-        stepName: { type: "string" },
         message: { type: "string" }
       }
     }

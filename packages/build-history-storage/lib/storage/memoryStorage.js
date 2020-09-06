@@ -1,75 +1,66 @@
 const buildHistory = {};
 
-const formatResponse = build => ({
-  ...build,
-  steps: Object.values(build.steps)
-});
-
 module.exports = {
   get: buildId => {
-    return formatResponse(buildHistory[buildId]);
+    return buildHistory[buildId];
   },
-  buildStarted: (jobName, buildId) => {
+  buildStarted: (jobName, buildId, startedAt) => {
     buildHistory[buildId] = {
       id: buildId,
       jobName,
-      startedAt: new Date().getTime(),
+      startedAt,
       status: "started",
-      steps: {}
-    };
-  },
-  buildSuccess: buildId => {
-    buildHistory[buildId] = {
-      ...buildHistory[buildId],
-      startedAt: new Date().getTime(),
-      status: "success"
-    };
-  },
-  buildFailure: buildId => {
-    buildHistory[buildId] = {
-      ...buildHistory[buildId],
-      startedAt: new Date().getTime(),
-      status: "failure"
-    };
-  },
-  buildStepStarted: (buildId, stepName) => {
-    buildHistory[buildId].steps[stepName] = {
-      id: stepName,
-      name: stepName,
-      startedAt: new Date().getTime(),
-      status: "started",
+      steps: [],
       messages: []
     };
   },
-  buildStepSuccess: (buildId, stepName) => {
-    buildHistory[buildId].steps[stepName] = {
-      ...buildHistory[buildId].steps[stepName],
-      successAt: new Date().getTime(),
+  buildSuccess: (buildId, successAt) => {
+    buildHistory[buildId] = {
+      ...buildHistory[buildId],
+      successAt,
       status: "success"
     };
   },
-  buildStepFailure: (buildId, stepName) => {
-    buildHistory[buildId].steps[stepName] = {
-      ...buildHistory[buildId].steps[stepName],
-      failureAt: new Date().getTime(),
+  buildFailure: (buildId, failureAt) => {
+    buildHistory[buildId] = {
+      ...buildHistory[buildId],
+      failureAt,
       status: "failure"
     };
   },
-  addStepMessage: (buildId, stepName, message) => {
-    buildHistory[buildId].steps[stepName] = {
-      ...buildHistory[buildId].steps[stepName],
-      messages: [
-        ...buildHistory[buildId].steps[stepName].messages,
-        {
-          content: message,
-          timestamp: new Date().getTime()
-        }
-      ]
+  buildStepStarted: (buildId, stepId, stepName, startedAt) => {
+    buildHistory[buildId].steps.push({
+      id: stepId,
+      name: stepName,
+      startedAt,
+      status: "started"
+    });
+  },
+  buildStepSuccess: (buildId, stepId, stepName, successAt) => {
+    const index = buildHistory[buildId].steps.findIndex(s => s.id === stepId);
+    buildHistory[buildId].steps[index] = {
+      ...(buildHistory[buildId].steps[index] || {}),
+      successAt,
+      status: "success"
     };
   },
+  buildStepFailure: (buildId, stepId, stepName, failureAt) => {
+    const index = buildHistory[buildId].steps.findIndex(s => s.id === stepId);
+    buildHistory[buildId].steps[index] = {
+      ...(buildHistory[buildId].steps[index] || {}),
+      failureAt,
+      status: "failure"
+    };
+  },
+  addBuildMessage: (buildId, message, timestamp) => {
+    buildHistory[buildId].messages.push({
+      message,
+      timestamp
+    });
+  },
   query: ({ jobName }) => {
-    return Object.values(buildHistory)
-      .filter(build => build.jobName === jobName)
-      .map(formatResponse);
+    return Object.values(buildHistory).filter(
+      build => build.jobName === jobName
+    );
   }
 };

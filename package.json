@@ -1,6 +1,10 @@
 {
   "name": "portkey",
+  "scripts": {
+    "test:automation": "jest --rootDir ./automation"
+  },
   "devDependencies": {
+    "jest": "^26.4.0",
     "lerna": "^3.22.1"
   }
 }

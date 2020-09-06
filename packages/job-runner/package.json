@@ -1,5 +1,5 @@
 {
-  "name": "@portkey/store",
+  "name": "@portkey/job-runner",
   "version": "0.0.0",
   "author": "Kareem Elbahrawy <bitriddler@gmail.com>",
   "main": "lib/index.js",
@@ -12,18 +12,13 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.com/"
   },
-  "scripts": {
-    "test": "jest"
-  },
-  "devDependencies": {
-    "jest": "^26.2.2"
-  },
   "dependencies": {
     "@portkey/actions": "^0.0.0",
-    "@portkey/ipc": "^0.0.0",
+    "@portkey/job": "^0.0.0",
+    "@portkey/store": "^0.0.0",
     "@portkey/utils": "^0.0.0",
     "debug": "^4.1.1",
-    "promise.any": "^2.0.1",
-    "socket.io": "^2.3.0"
+    "lodash": "^4.17.19",
+    "uuid": "^8.3.0"
   }
 }

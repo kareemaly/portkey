@@ -1,47 +1,24 @@
-const { actions: outputStreamActions } = require("@portkey/job-output-stream");
+#!/bin/node
+const shell = require("shelljs");
+const jobRunner = require("@portkey/job-runner");
 
-module.exports = (store, { buildId }) => {
-  return {
-    steps: [
-      {
-        name: "Build",
-        run: async () => {
-          store.dispatch(
-            outputStreamActions.send({
-              jobName: "frontend-builder",
-              buildId,
-              stepName: "Build",
-              message: "Logging some events"
-            })
-          );
-          await new Promise(resolve => setTimeout(resolve, 6000));
-          store.dispatch(
-            outputStreamActions.send({
-              jobName: "frontend-builder",
-              buildId,
-              stepName: "Build",
-              message: "Successful Build"
-            })
-          );
-        }
-      },
-      {
-        name: "Deploy",
-        run: () =>
-          new Promise(resolve => {
-            let i = 0;
-            setInterval(() => {
-              store.dispatch(
-                outputStreamActions.send({
-                  jobName: "frontend-builder",
-                  buildId,
-                  stepName: "Deploy",
-                  message: `Message #${i++}`
-                })
-              );
-            }, 10000);
-          })
-      }
-    ]
-  };
-};
+async function build({ store }) {
+  shell.exec("node --version");
+}
+
+async function deploy({ store }) {
+  shell.exec("node --version");
+}
+
+jobRunner({
+  steps: [
+    {
+      name: "Build",
+      run: build
+    },
+    {
+      name: "Deploy",
+      run: deploy
+    }
+  ]
+});

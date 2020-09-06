@@ -2,8 +2,12 @@
   "name": "@portkey/webapp",
   "version": "0.1.0",
   "private": true,
-  "files": ["build", "lib"],
+  "files": [
+    "build",
+    "lib"
+  ],
   "main": "lib/serve.js",
+  "proxy": "http://localhost:4000",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -17,6 +21,7 @@
     "eruda": "^2.3.3",
     "lodash": "^4.17.19",
     "normalize.css": "^8.0.1",
+    "normalizr": "^3.6.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
@@ -40,7 +45,11 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

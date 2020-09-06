@@ -1,6 +1,16 @@
 const { createActions } = require("@portkey/actions");
 const jobSchema = require("../utils/jobSchema");
 
+const errorObject = {
+  type: "object",
+  required: ["message"],
+  properties: {
+    message: {
+      type: "string"
+    }
+  }
+};
+
 module.exports = createActions("JOB", [
   {
     name: "ADD_JOB",
@@ -38,7 +48,7 @@ module.exports = createActions("JOB", [
       type: "object",
       required: ["error"],
       properties: {
-        error: { type: "object" }
+        error: errorObject
       }
     }
   },
@@ -91,10 +101,11 @@ module.exports = createActions("JOB", [
     name: "NOTIFY_BUILD_STEP_STARTED",
     payload: {
       type: "object",
-      required: ["jobName", "stepName", "buildId"],
+      required: ["jobName", "stepId", "stepName", "buildId"],
       properties: {
-        stepName: { type: "string" },
         jobName: { type: "string" },
+        stepId: { type: "string" },
+        stepName: { type: "string" },
         buildId: { type: "string" }
       }
     }
@@ -103,10 +114,11 @@ module.exports = createActions("JOB", [
     name: "NOTIFY_BUILD_STEP_SUCCESS",
     payload: {
       type: "object",
-      required: ["jobName", "stepName", "buildId"],
+      required: ["jobName", "stepId", "stepName", "buildId"],
       properties: {
-        stepName: { type: "string" },
         jobName: { type: "string" },
+        stepId: { type: "string" },
+        stepName: { type: "string" },
         buildId: { type: "string" }
       }
     }
@@ -115,12 +127,13 @@ module.exports = createActions("JOB", [
     name: "NOTIFY_BUILD_STEP_FAILURE",
     payload: {
       type: "object",
-      required: ["jobName", "stepName", "buildId", "error"],
+      required: ["jobName", "stepId", "stepName", "buildId", "error"],
       properties: {
         jobName: { type: "string" },
-        buildId: { type: "string" },
+        stepId: { type: "string" },
         stepName: { type: "string" },
-        error: { type: "object" }
+        buildId: { type: "string" },
+        error: errorObject
       }
     }
   }

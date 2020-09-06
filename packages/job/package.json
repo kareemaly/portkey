@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@portkey/actions": "^0.0.0",
+    "@portkey/job-output-stream": "^0.0.0",
     "@portkey/store": "^0.0.0",
     "@portkey/utils": "^0.0.0",
     "debug": "^4.1.1",

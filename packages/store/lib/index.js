@@ -1,7 +1,7 @@
-const createLocalStore = require("./localStore/createLocalStore");
-const reCreateLocalStore = require("./localStore/reCreateLocalStore");
+const createSocketIOStore = require("./socketIO/createSocketIOStore");
+const reCreateSocketIOStore = require("./socketIO/recreateSocketIOStore");
 
 module.exports = {
-  createStore: createLocalStore,
-  reCreateStore: reCreateLocalStore,
+  createStore: createSocketIOStore,
+  reCreateStore: reCreateSocketIOStore
 };
