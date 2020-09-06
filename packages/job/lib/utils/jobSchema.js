@@ -6,13 +6,9 @@ module.exports = {
     jobPath: { type: "string" },
     github: {
       type: "object",
-      required: ["url", "jobPath", "events"],
+      required: ["url", "events"],
       properties: {
         url: { type: "string" },
-        jobPath: {
-          type: "string",
-          pattern: ".*.js"
-        },
         events: {
           type: "array",
           items: {

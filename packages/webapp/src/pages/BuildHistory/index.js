@@ -72,15 +72,15 @@ const BuildHistory = ({ dispatch, builds }) => {
         </Button>
       </Grid>
       <Grid item>
-          <Box mt={2}>
-            {jobBuilds.map(build => (
-              <BuildSteps
-                onStepClick={onStepClick}
-                key={build.id}
-                build={build}
-              />
-            ))}
-          </Box>
+        <Box mt={2}>
+          {jobBuilds.map(build => (
+            <BuildSteps
+              onStepClick={onStepClick}
+              key={build.id}
+              build={build}
+            />
+          ))}
+        </Box>
       </Grid>
     </Grid>
   );

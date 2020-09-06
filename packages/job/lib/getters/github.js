@@ -1,4 +1,5 @@
 const debug = require("debug")("portkey:getJobFromGithub");
+const { actions: outputStreamActions } = require("@portkey/job-output-stream");
 const path = require("path");
 const rimraf = require("rimraf");
 const fs = require("fs");
@@ -13,7 +14,7 @@ const execP = promisify(exec);
 const getTempDir = () =>
   process.env.TEMP_DIR || path.join(process.cwd(), "tmp");
 
-const getJobFromGithub = async ({ job, buildId }) => {
+const getJobFromGithub = async ({ store, githubUrl, buildId }) => {
   const tmpDir = getTempDir();
 
   debug("Checking if temp dir exists %s", tmpDir);
@@ -22,22 +23,22 @@ const getJobFromGithub = async ({ job, buildId }) => {
     await mkdir(tmpDir);
   }
 
-  debug("Cloning repo %O", { job, buildId, tmpDir });
-  const { stdout, stderr } = await execP(
-    `git clone git@github.com:${job.github.name} ${buildId}`,
-    {
-      cwd: tmpDir
-    }
-  );
+  debug("Cloning repo %O", { githubUrl, buildId, tmpDir });
+  const { stdout, stderr } = await execP(`git clone ${githubUrl} ${buildId}`, {
+    cwd: tmpDir
+  });
 
-  if (stderr) {
-    throw new Exception(stderr.toString());
-  }
+  store.dispatch(
+    outputStreamActions.send({
+      buildId,
+      message: stderr ? stderr.toString() : stdout.toString()
+    })
+  );
 
   const repoFullPath = path.join(tmpDir, buildId);
 
   return {
-    jobPath: path.join(repoFullPath, job.github.jobPath)
+    repoFullPath
   };
 };
 

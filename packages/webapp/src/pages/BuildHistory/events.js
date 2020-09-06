@@ -1,4 +1,4 @@
-import { actions as jobActions } from "@portkey/job";
+import jobActions from "@portkey/job/lib/actions";
 
 export default [
   jobActions.NOTIFY_BUILD_STEP_FAILURE,
