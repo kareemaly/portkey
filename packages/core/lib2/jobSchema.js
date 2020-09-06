@@ -9,9 +9,7 @@ const githubSchema = Joi.object({
   name: Joi.string()
     .required()
     .pattern(new RegExp("^(.*)/(.*)$"))
-    .error(
-      new Error("Github option need to be in this format 'username/repo'")
-    ),
+    .error(new Error("Github name need to be in this format 'username/repo'")),
   jobPath: Joi.string().required(),
   workflow: Joi.array().items(githubEventHandlerSchema)
 });
