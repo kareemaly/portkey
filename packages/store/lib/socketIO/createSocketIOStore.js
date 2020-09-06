@@ -74,6 +74,7 @@ async function createSocketIOStore({
     waitFor,
     listen,
     listenOnce,
+    disconnect: store.disconnect,
     removeListener
   };
 }

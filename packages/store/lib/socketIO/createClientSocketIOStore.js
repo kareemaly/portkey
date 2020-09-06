@@ -39,7 +39,8 @@ async function createClientSocketIOStore({
   return {
     dispatch,
     listen,
-    listenOnce
+    listenOnce,
+    disconnect: () => instance.disconnect()
   };
 }
 

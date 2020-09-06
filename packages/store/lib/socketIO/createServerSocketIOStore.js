@@ -42,7 +42,8 @@ async function createServerSocketIOStore({ serverSocket }) {
   return {
     dispatch,
     listen,
-    listenOnce
+    listenOnce,
+    disconnect: () => serverSocket.disconnect()
   };
 }
 

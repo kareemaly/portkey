@@ -31,4 +31,5 @@ module.exports = async function jobRunner({ steps }) {
       }
     });
   }, Promise.resolve());
+  store.disconnect();
 };
