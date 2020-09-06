@@ -5,6 +5,9 @@ const errorObject = {
   type: "object",
   required: ["message"],
   properties: {
+    stack: {
+      type: "string"
+    },
     message: {
       type: "string"
     }

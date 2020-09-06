@@ -18,6 +18,7 @@
     "@portkey/store": "^0.0.0",
     "@portkey/utils": "^0.0.0",
     "debug": "^4.1.1",
-    "promise.any": "^2.0.1"
+    "promise.any": "^2.0.1",
+    "rimraf": "^3.0.2"
   }
 }

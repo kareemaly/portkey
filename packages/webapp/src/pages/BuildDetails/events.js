@@ -1,5 +1,5 @@
-import { actions as jobActions } from "@portkey/job";
-import { actions as outputActions } from "@portkey/job-output-stream";
+import jobActions from "@portkey/job/lib/actions";
+import outputActions from "@portkey/job-output-stream/lib/actions";
 
 export default [
   jobActions.NOTIFY_BUILD_STEP_FAILURE,

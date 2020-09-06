@@ -54,35 +54,22 @@ async function serve() {
   store.dispatch(
     jobActions.addJob({
       job: {
-        jobName: "frontend-builder",
-        jobPath: path.resolve(__dirname, "./frontend-builder-job.js")
-        // github: {
-        //   url: "https://github.com/kareemaly/react-items-carousel",
-        //   events: [
-        //     {
-        //       jobPath: "automation/check.js",
-        //       event: "pull_request",
-        //       conditions: [
-        //         {
-        //           type: "oneOf",
-        //           key: ".action",
-        //           value: ["opened", "edited", "reopened", "synchronize"]
-        //         }
-        //       ]
-        //     },
-        //     {
-        //       jobPath: "automation/publish.js",
-        //       event: "push",
-        //       conditions: [
-        //         {
-        //           type: "equal",
-        //           key: ".ref",
-        //           value: "refs/heads/master"
-        //         }
-        //       ]
-        //     }
-        //   ]
-        // }
+        jobName: "frontend-builder-local",
+        jobPath: path.resolve(__dirname, "frontend-builder-job.js")
+      }
+    })
+  );
+
+  store.dispatch(
+    jobActions.addJob({
+      job: {
+        jobName: "frontend-builder-github",
+        jobPath:
+          "packages/integration-tests/lib/rest-api-service/frontend-builder-job.js",
+        github: {
+          url: "git@github.com:kareemaly/portkey",
+          events: []
+        }
       }
     })
   );

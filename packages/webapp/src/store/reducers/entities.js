@@ -1,8 +1,8 @@
 import keys from "lodash/keys";
 import uniq from "lodash/uniq";
 import { normalize } from "normalizr";
-import { actions as jobActions } from "@portkey/job";
-import { actions as outputStreamActions } from "@portkey/job-output-stream";
+import jobActions from "@portkey/job/lib/actions";
+import outputStreamActions from "@portkey/job-output-stream/lib/actions";
 import * as localActions from "../actions";
 import { buildSchema } from "./schemas";
 
