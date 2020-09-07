@@ -44,7 +44,7 @@ const BuildStep = ({ step, onStepClick }) => {
       p={3}
       mr={2}
       className={classes.buildStep}
-      onClick={e => onStepClick(e, step.id)}
+      onClick={e => onStepClick(e, step._id)}
     >
       <div className={classes.buildStepName}>
         <Typography variant={"subtitle2"}>{step.name}</Typography>
@@ -63,10 +63,10 @@ const BuildSteps = ({ build, onStepClick }) => {
   return (
     <Grid container>
       {build.steps.map(step => (
-        <Grid item key={step.id}>
+        <Grid item key={step._id}>
           <Box mb={2}>
             <BuildStep
-              onStepClick={(e, stepId) => onStepClick(e, build.id, stepId)}
+              onStepClick={(e, stepId) => onStepClick(e, build._id, stepId)}
               step={step}
             />
           </Box>

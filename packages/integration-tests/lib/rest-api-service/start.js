@@ -2,28 +2,54 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
+const mongoose = require("mongoose");
 const httpModule = require("http");
 const socketIo = require("socket.io");
 const { createStore } = require("@portkey/store");
 const {
-  memoryStorage: jobStorage,
   registerHandlers: jobRegisterHandlers,
   actions: jobActions
 } = require("@portkey/job");
 const { serve: serveWebApp } = require("@portkey/webapp");
 const { serve: serveApi } = require("@portkey/rest-api-service");
 const {
-  memoryStorage: buildHistoryStorage,
+  mongoStorage: buildHistoryStorageCreator,
   registerHandlers: buildHistoryRegisterHandlers
 } = require("@portkey/build-history-storage");
 const {
   middleware: gitHooksMiddleware
 } = require("@portkey/git-flow-middleware");
 
+const connectMongoDB = () =>
+  new Promise((resolve, reject) => {
+    const mongoInstance = new mongoose.Mongoose();
+    mongoInstance.connect("mongodb://localhost", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      dbName: "portkey2"
+    });
+
+    mongoInstance.connection.on("error", error => {
+      reject("connection error");
+    });
+
+    mongoInstance.connection.once("open", function() {
+      console.log("Connected to database");
+      resolve(mongoInstance);
+    });
+  });
+
 async function serve() {
+  const mongoInstance = await connectMongoDB();
+
   const app = express();
   const http = httpModule.createServer(app);
   const io = socketIo(http);
+
+  const buildHistoryStorage = buildHistoryStorageCreator({
+    mongoInstance
+  });
 
   app.use(bodyParser.json());
   app.use(cors());
@@ -108,4 +134,7 @@ async function serve() {
   });
 }
 
-serve().catch(console.error);
+serve().catch(err => {
+  process.exit(1);
+  console.error(err);
+});

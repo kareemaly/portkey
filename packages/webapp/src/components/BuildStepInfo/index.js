@@ -36,8 +36,8 @@ const getStepSubTitle = step => {
 const getBetween = (messages, from, to) => {
   return messages.filter(message => {
     return (
-      new Date(message.timestamp) < new Date(to) &&
-      new Date(message.timestamp) > new Date(from)
+      new Date(message.sentAt) < new Date(to) &&
+      new Date(message.sentAt) > new Date(from)
     );
   });
 };
@@ -60,13 +60,13 @@ const BuildStepInfo = ({ messages, step }) => {
           messages,
           step.startedAt,
           step.successAt || step.failureAt || Date.now()
-        ).map(({ message, timestamp }) => (
-          <Box mb={1} key={timestamp}>
+        ).map(({ message, sentAt }) => (
+          <Box mb={1} key={sentAt}>
             <Grid container>
               <Grid item>
                 <Box mr={2}>
                   <Typography variant={"caption"}>
-                    {dateFormat(timestamp, "mediumTime")}
+                    {dateFormat(sentAt, "mediumTime")}
                   </Typography>
                 </Box>
               </Grid>

@@ -1,3 +1,4 @@
+import get from "lodash/get";
 import keys from "lodash/keys";
 import uniq from "lodash/uniq";
 import { normalize } from "normalizr";
@@ -36,7 +37,7 @@ function updateEntity(entityName, state, data) {
     ...state,
     [entityName]: {
       ...state[entityName],
-      [data.id]: data
+      [data._id]: data
     }
   };
 }
@@ -44,7 +45,7 @@ function updateEntity(entityName, state, data) {
 function updateBuild(state, build) {
   return updateEntity("builds", state, {
     ...defaultBuild,
-    ...state.builds[build.id],
+    ...state.builds[build._id],
     ...build
   });
 }
@@ -52,12 +53,12 @@ function updateBuild(state, build) {
 function addBuildStep(state, build, step) {
   const newState = updateBuild(state, {
     ...build,
-    steps: uniq([...state.builds[build.id].steps, step.id])
+    steps: uniq([...get(state, ["builds", build._id, "steps"], []), step._id])
   });
 
   return updateEntity("buildSteps", newState, {
     ...defaultStep,
-    ...state.buildSteps[step.id],
+    ...state.buildSteps[step._id],
     ...step
   });
 }
@@ -69,21 +70,21 @@ export default function entitiesReducer(state = defaultState, action) {
       return mergeEntities(state, entities);
     case jobActions.NOTIFY_BUILD_STARTED:
       return updateBuild(state, {
-        id: action.payload.buildId,
+        _id: action.payload.buildId,
         startedAt: action.payload.sentAt,
         status: "started",
         jobName: action.payload.jobName
       });
     case jobActions.NOTIFY_BUILD_SUCCESS:
       return updateBuild(state, {
-        id: action.payload.buildId,
+        _id: action.payload.buildId,
         successAt: action.payload.sentAt,
         status: "success",
         jobName: action.payload.jobName
       });
     case jobActions.NOTIFY_BUILD_FAILURE:
       return updateBuild(state, {
-        id: action.payload.buildId,
+        _id: action.payload.buildId,
         failureAt: action.payload.sentAt,
         status: "failure",
         jobName: action.payload.jobName
@@ -92,11 +93,11 @@ export default function entitiesReducer(state = defaultState, action) {
       return addBuildStep(
         state,
         {
-          id: action.payload.buildId,
+          _id: action.payload.buildId,
           jobName: action.payload.jobName
         },
         {
-          id: action.payload.stepId,
+          _id: action.payload.stepId,
           name: action.payload.stepName,
           startedAt: action.payload.sentAt,
           status: "started"
@@ -106,11 +107,11 @@ export default function entitiesReducer(state = defaultState, action) {
       return addBuildStep(
         state,
         {
-          id: action.payload.buildId,
+          _id: action.payload.buildId,
           jobName: action.payload.jobName
         },
         {
-          id: action.payload.stepId,
+          _id: action.payload.stepId,
           name: action.payload.stepName,
           successAt: action.payload.sentAt,
           status: "success"
@@ -120,11 +121,11 @@ export default function entitiesReducer(state = defaultState, action) {
       return addBuildStep(
         state,
         {
-          id: action.payload.buildId,
+          _id: action.payload.buildId,
           jobName: action.payload.jobName
         },
         {
-          id: action.payload.stepId,
+          _id: action.payload.stepId,
           name: action.payload.stepName,
           failureAt: action.payload.sentAt,
           status: "failure"
@@ -132,7 +133,7 @@ export default function entitiesReducer(state = defaultState, action) {
       );
     case outputStreamActions.SEND:
       return updateBuild(state, {
-        id: action.payload.buildId,
+        _id: action.payload.buildId,
         messages: [
           ...state.builds[action.payload.buildId].messages,
           {

@@ -24,9 +24,7 @@ module.exports = (store, { buildHistoryStorage, jobStorage }) => {
 
   router.get("/build", async (req, res, next) => {
     try {
-      const data = await buildHistoryStorage.query({
-        jobName: req.query.jobName
-      });
+      const data = await buildHistoryStorage.getByJobName(req.query.jobName);
       res.send({ data });
     } catch (err) {
       next(err);
@@ -35,7 +33,7 @@ module.exports = (store, { buildHistoryStorage, jobStorage }) => {
 
   router.get("/build/:buildId", async (req, res, next) => {
     try {
-      const build = await buildHistoryStorage.get(req.params.buildId);
+      const build = await buildHistoryStorage.getById(req.params.buildId);
       res.send({ data: build });
     } catch (err) {
       next(err);

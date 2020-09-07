@@ -10,9 +10,7 @@
     "lib": "lib",
     "test": "__tests__"
   },
-  "files": [
-    "lib"
-  ],
+  "files": ["lib"],
   "publishConfig": {
     "registry": "https://registry.npmjs.com/"
   },
@@ -34,6 +32,7 @@
     "cors": "^2.8.5",
     "debug": "^4.1.1",
     "express": "^4.17.1",
+    "mongoose": "^5.10.3",
     "shelljs": "^0.8.4",
     "socket.io": "^2.3.0"
   }

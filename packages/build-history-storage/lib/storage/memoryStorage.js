@@ -1,12 +1,17 @@
 const buildHistory = {};
 
-module.exports = {
-  get: buildId => {
+module.exports = () => ({
+  getById: buildId => {
     return buildHistory[buildId];
+  },
+  getByJobName: jobName => {
+    return Object.values(buildHistory).filter(
+      build => build.jobName === jobName
+    );
   },
   buildStarted: (jobName, buildId, startedAt) => {
     buildHistory[buildId] = {
-      id: buildId,
+      _id: buildId,
       jobName,
       startedAt,
       status: "started",
@@ -30,7 +35,7 @@ module.exports = {
   },
   buildStepStarted: (buildId, stepId, stepName, startedAt) => {
     buildHistory[buildId].steps.push({
-      id: stepId,
+      _id: stepId,
       name: stepName,
       startedAt,
       status: "started"
@@ -57,10 +62,5 @@ module.exports = {
       message,
       timestamp
     });
-  },
-  query: ({ jobName }) => {
-    return Object.values(buildHistory).filter(
-      build => build.jobName === jobName
-    );
   }
-};
+});

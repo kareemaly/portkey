@@ -5,5 +5,5 @@ const memoryStorage = require("./storage/memoryStorage");
 module.exports = {
   memoryStorage,
   registerHandlers,
-  actions,
+  actions
 };
