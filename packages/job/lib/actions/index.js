@@ -16,46 +16,6 @@ const errorObject = {
 
 module.exports = createActions("JOB", [
   {
-    name: "ADD_JOB",
-    payload: {
-      type: "object",
-      required: ["job"],
-      properties: {
-        job: jobSchema
-      }
-    }
-  },
-  {
-    name: "ADD_JOB_STARTED",
-    payload: {
-      type: "object",
-      required: ["job"],
-      properties: {
-        job: jobSchema
-      }
-    }
-  },
-  {
-    name: "ADD_JOB_SUCCESS",
-    payload: {
-      type: "object",
-      required: ["job"],
-      properties: {
-        job: jobSchema
-      }
-    }
-  },
-  {
-    name: "ADD_JOB_FAILURE",
-    payload: {
-      type: "object",
-      required: ["error"],
-      properties: {
-        error: errorObject
-      }
-    }
-  },
-  {
     name: "RUN_JOB",
     payload: {
       type: "object",

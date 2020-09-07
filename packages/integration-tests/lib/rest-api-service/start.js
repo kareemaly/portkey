@@ -7,6 +7,7 @@ const httpModule = require("http");
 const socketIo = require("socket.io");
 const { createStore } = require("@portkey/store");
 const {
+  memoryStorage: jobStorage,
   registerHandlers: jobRegisterHandlers,
   actions: jobActions
 } = require("@portkey/job");
@@ -104,30 +105,20 @@ async function serve() {
   //   }
   // });
 
+  jobStorage.add("frontend-builder-local", {
+    jobPath: path.resolve(__dirname, "frontend-builder-job.js")
+  });
+
+  jobStorage.add("frontend-builder-github", {
+    jobPath:
+      "packages/integration-tests/lib/rest-api-service/frontend-builder-job.js",
+    github: {
+      url: "git@github.com:kareemaly/portkey"
+    }
+  });
+
   buildHistoryRegisterHandlers(store, buildHistoryStorage);
   jobRegisterHandlers(store, jobStorage);
-
-  store.dispatch(
-    jobActions.addJob({
-      job: {
-        jobName: "frontend-builder-local",
-        jobPath: path.resolve(__dirname, "frontend-builder-job.js")
-      }
-    })
-  );
-
-  store.dispatch(
-    jobActions.addJob({
-      job: {
-        jobName: "frontend-builder-github",
-        jobPath:
-          "packages/integration-tests/lib/rest-api-service/frontend-builder-job.js",
-        github: {
-          url: "git@github.com:kareemaly/portkey"
-        }
-      }
-    })
-  );
 
   http.listen(4000, () => {
     console.log(`App listenting on port 4000`);
