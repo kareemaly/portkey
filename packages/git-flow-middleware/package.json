@@ -1,0 +1,21 @@
+{
+  "name": "@portkey/git-flow-middleware",
+  "version": "0.0.0",
+  "author": "Kareem Elbahrawy <bitriddler@gmail.com>",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com/"
+  },
+  "dependencies": {
+    "@portkey/job": "^0.0.0",
+    "ajv": "^6.12.4",
+    "debug": "^4.1.1",
+    "lodash": "^4.17.19"
+  }
+}

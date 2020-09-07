@@ -62,7 +62,8 @@ module.exports = createActions("JOB", [
       required: ["jobName", "viewerId"],
       properties: {
         jobName: { type: "string" },
-        viewerId: { type: "string" }
+        viewerId: { type: "string" },
+        environment: { type: "object" }
       }
     }
   },

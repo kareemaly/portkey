@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const path = require("path");
 const httpModule = require("http");
 const socketIo = require("socket.io");
@@ -15,12 +16,16 @@ const {
   memoryStorage: buildHistoryStorage,
   registerHandlers: buildHistoryRegisterHandlers
 } = require("@portkey/build-history-storage");
+const {
+  middleware: gitHooksMiddleware
+} = require("@portkey/git-flow-middleware");
 
 async function serve() {
   const app = express();
   const http = httpModule.createServer(app);
   const io = socketIo(http);
 
+  app.use(bodyParser.json());
   app.use(cors());
 
   const store = await createStore({
@@ -30,6 +35,31 @@ async function serve() {
       transports: ["websocket"]
     }
   });
+
+  app.post(
+    "/git-hooks",
+    gitHooksMiddleware({
+      store,
+      hooks: [
+        {
+          repository: "OriginPush/op-wsl-java-core",
+          events: [
+            {
+              jobName: "frontend-builder-local",
+              event: "push",
+              conditions: [
+                {
+                  selector: ".action",
+                  type: "equal",
+                  value: "closed"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    })
+  );
 
   serveApi({
     store,
@@ -67,8 +97,7 @@ async function serve() {
         jobPath:
           "packages/integration-tests/lib/rest-api-service/frontend-builder-job.js",
         github: {
-          url: "git@github.com:kareemaly/portkey",
-          events: []
+          url: "git@github.com:kareemaly/portkey"
         }
       }
     })
