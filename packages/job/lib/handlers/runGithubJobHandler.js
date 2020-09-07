@@ -19,7 +19,7 @@ module.exports = store => async ({ job, buildId }) => {
     store.dispatch(actions.notifyBuildStepStarted(stepData));
     const result = await getJobFromGithub({
       store,
-      githubUrl: job.github.url,
+      githubUrl: job.githubUrl,
       buildId
     });
     repoFullPath = result.repoFullPath;

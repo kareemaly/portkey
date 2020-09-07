@@ -112,9 +112,7 @@ async function serve() {
   jobStorage.add("frontend-builder-github", {
     jobPath:
       "packages/integration-tests/lib/rest-api-service/frontend-builder-job.js",
-    github: {
-      url: "git@github.com:kareemaly/portkey"
-    }
+    githubUrl: "git@github.com:kareemaly/portkey"
   });
 
   buildHistoryRegisterHandlers(store, buildHistoryStorage);
